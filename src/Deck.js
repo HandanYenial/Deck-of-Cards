@@ -22,11 +22,69 @@ useEffect(() => {
     getData();//this will get a new deck of cards
 }, [setDeck]); //this will get a new deck of cards every time the component is rendered
 
+//if the user chooses autoDrwan then draw a card automatically in every second.
+//// by using useRef we can keep track of the timer
+//and by using useEffect we can draw a card fri=om the api, add card to state "drawn" list
+//and then remove the card from the state "deck" list
+   useEffect(() => {
+    async function getCard(){
+        let { deck_id } = deck;
 
+        try{
+            let drawResult = await axios.get(`${API_BASE_URL}${deck_id}/draw/`);
+
+            if(drawResult.data.remaining === 0){
+                setAutoDraw(false);
+                throw new Error("No more cards in the deck");
+            }
+
+            const card = drawResult.data.cards[0]; //we only want the first card
+            setDrawn(d => [ ...d, 
+                                 {
+                                    id : card.code,
+                                    name: card.suit+""+card.value,
+                                    image:card.image
+                                 }
+                                ]);
+        }catch(err){
+            console.log(err);
+        }
+    }
+
+    if(autodraw && !timerRef.current){//if the timer is not running and the user wants to autoDraw
+        timerRef.current = setInterval(async () => {
+            await getCard();
+        } , 1000); //this will draw a card every second
+    } 
+    return() =>{
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+    };
+   } , [autoDraw, setAutoDraw , deck]);
+
+   const toggleAutoDraw = () =>{
+         setAutoDraw(auto => !auto);
+   };
+
+   const cards = drawn.map(c =>(
+    <Card
+         key={c.id}
+         name ={c.name}
+         image={c.image}
+    />
+   ));
 
   return (
-    <div>Deck</div>
-  )
+    <div className = "Deck">
+        {deck ? (
+            <button className="Deck-gimme" onClick={toogleAutoDraw}>
+                {autoDraw ? "Stop" : "Start"} Drawing For Me! 
+            </button>
+        ) : null }
+        <div className="Deck-cardarea"> { cards } </div>
+        
+    </div>
+  );
 }
 
 export default Deck

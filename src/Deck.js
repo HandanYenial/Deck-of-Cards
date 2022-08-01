@@ -2,6 +2,7 @@ import React from 'react'
 import Card from "./Card";
 import { useState , useEffect , useRef } from "react";
 import axios from "axios";
+import "./Deck.css";
 
 //we will use deck api for this project : it lets us to shuffle, reshuffle the cards,
 //a brand new deck,
@@ -51,7 +52,7 @@ useEffect(() => {
         }
     }
 
-    if(autodraw && !timerRef.current){//if the timer is not running and the user wants to autoDraw
+    if(autoDraw && !timerRef.current){//if the timer is not running and the user wants to autoDraw
         timerRef.current = setInterval(async () => {
             await getCard();
         } , 1000); //this will draw a card every second
@@ -63,7 +64,7 @@ useEffect(() => {
    } , [autoDraw, setAutoDraw , deck]);
 
    const toggleAutoDraw = () =>{
-         setAutoDraw(auto => !auto);
+         setAutoDraw(auto => !auto); // setAotoDraw will take auto and return the opposite
    };
 
    const cards = drawn.map(c =>(
@@ -77,7 +78,7 @@ useEffect(() => {
   return (
     <div className = "Deck">
         {deck ? (
-            <button className="Deck-gimme" onClick={toogleAutoDraw}>
+            <button className="Deck-gimme" onClick={toggleAutoDraw}>
                 {autoDraw ? "Stop" : "Start"} Drawing For Me! 
             </button>
         ) : null }

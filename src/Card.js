@@ -6,7 +6,7 @@ import "./Card.css";
  // return <div className="card">{card}</div>;
 //}
 
-function placeACard({name, image}){
+function Card({name, image}){
     const [{angle, xPosition,yPosition}] = useState({ //useState returns an array with the state and a function to update it
         angle:Math.random()*90-45,      //iniitial state of the card will be on a random angle
         xPosition: Math.random()*40-20, //initial state of the card will be on a random position on the x axis
@@ -26,5 +26,5 @@ function placeACard({name, image}){
     );
 }
 
-export default placeACard;
+export default Card;
 

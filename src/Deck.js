@@ -8,6 +8,10 @@ import "./Deck.css";
 //a brand new deck,
 const API_BASE_URL = "https://deckofcardsapi.com/api/deck/";
 
+// A React Componnet maintains its own state.
+// If state changes in any events (e: setHooks,useEffect())) , the component will re-render.
+// If the 
+
 function Deck() {
     const [deck, setDeck] = useState(null);
     const [drawn, setDrawn] = useState([]); //this is an array of cards
@@ -16,9 +20,10 @@ function Deck() {
 
     //use the api to get a deck of cards
 useEffect(() => {
+    console.log("useEffect1");
     async function getData(){
         let deck = await axios.get("https://deckofcardsapi.com/api/deck/new/shuffle/");
-        setDeck(deck.data);
+        setDeck(deck.data); //modifying the data --useState(null) -- it changes to show the cards.
     }
     getData();//this will get a new deck of cards
 }, [setDeck]); //this will get a new deck of cards every time the component is rendered
@@ -28,6 +33,7 @@ useEffect(() => {
 //and by using useEffect we can draw a card fri=om the api, add card to state "drawn" list
 //and then remove the card from the state "deck" list
    useEffect(() => {
+    console.log("useEffect2");
     async function getCard(){
         let { deck_id } = deck;
 
@@ -53,7 +59,7 @@ useEffect(() => {
     }
 
     if(autoDraw && !timerRef.current){//if the timer is not running and the user wants to autoDraw
-        timerRef.current = setInterval(async () => {
+        timerRef.current = setInterval(async () => { ////the timer when start 60-59-58 when the page is refreshed it start 58-57-56
             await getCard();
         } , 1000); //this will draw a card every second
     } 
@@ -75,9 +81,10 @@ useEffect(() => {
     />
    ));
 
+
   return (
     <div className = "Deck">
-        {deck ? (
+        {deck ? ( //initially it was null
             <button className="Deck-gimme" onClick={toggleAutoDraw}>
                 {autoDraw ? "Stop" : "Start"} Drawing For Me! 
             </button>

@@ -59,21 +59,21 @@ useEffect(() => {
     }
 
     if(autoDraw && !timerRef.current){//if the timer is not running and the user wants to autoDraw
-        timerRef.current = setInterval(async () => { ////the timer when start 60-59-58 when the page is refreshed it start 58-57-56
+        timerRef.current = setInterval(async () => { //the timer when start 60-59-58 when the page is refreshed it start 58-57-56
             await getCard();
         } , 1000); //this will draw a card every second
     } 
     return() =>{
-        clearInterval(timerRef.current);
-        timerRef.current = null;
+        clearInterval(timerRef.current); //this will clear the timer when the component is unmounted
+        timerRef.current = null; //
     };
-   } , [autoDraw, setAutoDraw , deck]);
+   } , [autoDraw, setAutoDraw , deck]); //
 
    const toggleAutoDraw = () =>{
          setAutoDraw(auto => !auto); // setAotoDraw will take auto and return the opposite
    };
 
-   const cards = drawn.map(c =>(
+   const cards = drawn.map(c =>(//this will map the drawn cards to the cards component
     <Card
          key={c.id}
          name ={c.name}
